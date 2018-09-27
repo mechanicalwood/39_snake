@@ -73,6 +73,7 @@ void RunGame()
 {
 	Game game;
 	GameInit(&game);
+	DisplayWall(game.width, game.height);
 	DisplaySnake(&game.snake);
 
 	while (1) {
