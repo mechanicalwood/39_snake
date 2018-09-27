@@ -3,6 +3,20 @@
 #include <stdbool.h>
 #include <Windows.h>
 
+
+
+static void _Pause()
+{
+	while (1)
+	{
+		Sleep(300);
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			break;
+		}
+	}
+}
+
 static Position GetNextPosition(const Snake *pSnake)
 {
 	Position nextPos = pSnake->head->pos;
@@ -73,6 +87,7 @@ void RunGame()
 {
 	Game game;
 	GameInit(&game);
+	ViewInit(game.width, game.height);
 	DisplayWall(game.width, game.height);
 	DisplaySnake(&game.snake);
 
@@ -90,6 +105,15 @@ void RunGame()
 		else if (GetAsyncKeyState(VK_RIGHT) && game.snake.direction != LEFT) {
 			game.snake.direction = RIGHT;
 		}
+		else if (GetAsyncKeyState(VK_SPACE)) {
+			_Pause();
+		}
+		else if (GetAsyncKeyState(VK_ESCAPE)) {
+			break;
+		}
+		else if (GetAsyncKeyState(VK_F1)) {
+			game.speed = 100;
+		}
 
 		Position nextPos = GetNextPosition(&game.snake);
 		if (IsEaten(nextPos, game.food)) {
@@ -98,11 +122,12 @@ void RunGame()
 			if (game.speed >= 100) {
 				game.speed -= 10;
 			}
+			DisplayScore(game.score);
 			FoodInit(&game.food, game.width, game.height, &game.snake);
 		}
 		else {
-			SnakeAddHead(&game.snake, nextPos);
 			SnakeRemoveTail(&game.snake);
+			SnakeAddHead(&game.snake, nextPos);
 		}
 
 		if (IsHitWall(nextPos, game.width, game.height)) {
@@ -120,7 +145,13 @@ void RunGame()
 }
 
 
+#include <time.h>
+
 int main()
 {
+	srand((unsigned)time(NULL));
+	printf("欢迎进入贪吃蛇的世界\n");
+	system("pause");
+	system("cls");
 	RunGame();
 }

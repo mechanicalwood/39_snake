@@ -58,6 +58,8 @@ void FoodInit(Position *pFood, int width, int height, const Snake *pSnake)
 
 	pFood->x = x;
 	pFood->y = y;
+
+	DisplayFood(x, y);
 }
 
 void GameInit(Game *pGame)
